@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trappy Flump</title>
+<meta name="description" content="Flappy Bird with a blond-swooped head, towering piles of cash and breaking news that changes the rules mid-flight. Play in your browser, then get it on Google Play.">
+<meta property="og:title" content="Trappy Flump">
+<meta property="og:description" content="Flap the head. Dodge the cash. Survive the news. Free on Android.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#46a0f2">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+	<a class="brand" href="#play"><img src="title.svg" alt="Trappy Flump" width="50" height="8"></a>
+	<nav aria-label="Sections">
+		<a href="#play">Play</a>
+		<a href="#news">Breaking news</a>
+		<a href="#about">About</a>
+		<a href="privacy.html">Privacy</a>
+	</nav>
+	<a class="btn" href="https://play.google.com/store/apps/details?id=com.eiilo.games.trappyflump"><span class="play-glyph" aria-hidden="true"></span>Get it on Google Play</a>
+</header>
+
+<section class="hero" id="play">
+	<div class="hero-grid">
+		<div class="hero-copy">
+			<h1>Flap the head. Dodge the cash. Survive the news.</h1>
+			<p class="lede">Flappy Bird, except the bird is a blond-swooped head in a red tie, the pipes are towering piles of money, and every few seconds a headline hits and the rules change. Crash and a familiar rival turns up to laugh.</p>
+			<a class="btn btn-big" href="https://play.google.com/store/apps/details?id=com.eiilo.games.trappyflump"><span class="play-glyph" aria-hidden="true"></span>Get it on Google Play</a>
+			<p class="fine">Free on Android. The phone version is this exact game, built for a thumb.</p>
+		</div>
+		<div class="phone">
+			<div class="frame" id="frame">
+				<canvas id="game" width="128" height="228" tabindex="0" aria-label="Trappy Flump, playable. Click or tap the game once to give it focus, then tap or press space to flap.">Your browser cannot show the game. Get it on Google Play instead.</canvas>
+				<div class="focus-hint" aria-hidden="true">
+					<span class="focus-hint-label"><span class="fine-pointer">Click to play</span><span class="coarse-pointer">Tap to play</span></span>
+					<span class="focus-hint-sub fine-pointer">Keys only work while the game is selected</span>
+				</div>
+			</div>
+			<p class="controls">Click the game first. Then tap to flap, or on a keyboard <kbd>SPACE</kbd> flaps and <kbd>R</kbd> goes back to the menu. Sound, music and achievements live on the menu, as in the app.</p>
+			<div class="audio-toggles" role="group" aria-label="Audio">
+				<button type="button" class="toggle" id="toggle-sound" aria-pressed="true">Sound <span>on</span></button>
+				<button type="button" class="toggle" id="toggle-music" aria-pressed="false">Music <span>off</span></button>
+			</div>
+		</div>
+	</div>
+	<svg class="hills" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true">
+		<path fill="#94ce84" d="M0 120 C120 60 220 150 340 110 S560 40 700 100 S920 160 1040 90 S1160 70 1200 100 V200 H0 Z"/>
+		<path fill="#72ba68" d="M0 170 C150 130 260 190 400 160 S640 120 780 165 S1000 190 1200 150 V200 H0 Z"/>
+	</svg>
+	<div class="ground" aria-hidden="true"></div>
+</section>
+
+<section class="section" id="news">
+	<div class="inner">
+		<h2 class="banner" style="--c:#ce421a">Breaking news</h2>
+		<p>Once you have passed a few piles, headlines start to hit. A coloured news bar flashes across the top for a couple of seconds, then shrinks to a small label with a draining timer. While it runs, the rules change.</p>
+		<ul class="events">
+			<li style="--c:#ce421a"><h3>Inflation <small>Piles swell</small></h3><p>New piles are one and a half times wider, and the gaps between them shrink by a fifth.</p></li>
+			<li style="--c:#b2161e"><h3>China tariffs <small>Red piles, fast</small></h3><p>New piles come in red with gold straps, and everything scrolls a third faster.</p></li>
+			<li style="--c:#3c2228"><h3>War <small>Incoming missiles</small></h3><p>The sky darkens and missiles fly in at nearly twice the scroll speed. Touch one and you are done.</p></li>
+			<li style="--c:#1c803e"><h3>Rate cut <small>Everything floats</small></h3><p>Gravity drops by almost half, flaps get softer and new gaps open up. A breather.</p></li>
+			<li style="--c:#1e46b0"><h3>Election <small>Double points</small></h3><p>Every pile is worth two points, and the world scrolls a little faster to make you earn them.</p></li>
+			<li style="--c:#b07810"><h3>Immunity <small>Untouchable</small></h3><p>The one good headline. For eight seconds the head flashes every colour and bulldozes straight through piles and missiles, a little faster than usual. Only the ground can still end it.</p></li>
+			<li style="--c:#28283a"><h3>Shutdown <small>Lights out</small></h3><p>Everything goes dark except a spotlight around the head. The piles are still there; you just cannot see them coming.</p></li>
+			<li style="--c:#168c5a"><h3>Stimulus <small>Free money</small></h3><p>Loose bills drift in between the piles. Every one you touch is a point, on top of the usual.</p></li>
+			<li style="--c:#46607a"><h3>Hurricane <small>Gusts</small></h3><p>The sky turns grey, the rain comes in sideways and gusts shove the head up and down while you try to line up.</p></li>
+		</ul>
+		<dl class="rules">
+			<dt>When they happen</dt>
+			<dd>Nothing before a score of three. After that, every pile you pass rolls the dice, unless an event is already running or the short cooldown after the last one is still ticking. The same headline never hits twice in a row.</dd>
+			<dt>What they never do</dt>
+			<dd>A pile you are already lined up for never changes shape or moves. Only piles spawned during the event are affected, so a headline is never an instant, unfair death.</dd>
+		</dl>
+	</div>
+</section>
+
+<section class="section" id="about">
+	<div class="inner">
+		<h2 class="banner" style="--c:#1e46b0">About</h2>
+		<div class="two-col">
+			<div>
+				<h3>Where it came from</h3>
+				<p>Trappy Flump started as a Flappy Bird clone that ran inside a terminal, drawing real pixel graphics with coloured half-block characters instead of ASCII art. The bird became a certain blond-swooped head, the pipes became piles of cash, and the breaking-news events followed.</p>
+				<p>The Android app is the same game rebuilt for a phone: same sprites, same physics, same headlines, tuned for a portrait screen and a tapping thumb. The version on this page is that game, running in your browser.</p>
+			</div>
+			<div>
+				<h3>What it is not</h3>
+				<p>This is satire. The characters are caricatures drawn at twelve pixels wide, and the game is not affiliated with, endorsed by or connected to any real person, party, government or news organisation.</p>
+				<p>Nothing here is a comment on anyone's actual policies. It is a comment on how it feels to read the news while trying to keep a small head in the air.</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="section cta-band" id="get">
+	<div class="inner">
+		<h2>Take it with you</h2>
+		<p>Your best score on this page stays in this browser. The app keeps it on your phone, works offline, and fits in a pocket.</p>
+		<a class="btn btn-big" href="https://play.google.com/store/apps/details?id=com.eiilo.games.trappyflump"><span class="play-glyph" aria-hidden="true"></span>Get it on Google Play</a>
+	</div>
+</section>
+
+<footer>
+	<div class="inner">
+		<span>Trappy Flump by eiilo, 2026</span>
+		<a href="privacy.html">Privacy policy</a>
+		<a href="#play">Back to the top</a>
+	</div>
+</footer>
+
+<script src="game.js"></script>
+<script src="audio.js"></script>
+<script>
+(function () {
+	var canvas = document.getElementById("game");
+	if (!canvas.getContext) return;
+	var game = TrappyFlump.mount(canvas);
+	var audio = TrappyAudio.attach(game, canvas);
+
+	// The same switches as the game's menu buttons, for a keyboard or a
+	// screen reader; both stay in step through audio.onchange.
+	var renders = [];
+	function bindToggle(id, key, setter) {
+		var btn = document.getElementById(id);
+		var label = btn.querySelector("span");
+		function render() {
+			var on = audio[key];
+			btn.setAttribute("aria-pressed", on ? "true" : "false");
+			btn.classList.toggle("off", !on);
+			label.textContent = on ? "on" : "off";
+		}
+		btn.addEventListener("click", function () { setter(!audio[key]); canvas.focus({ preventScroll: true }); });
+		renders.push(render);
+		render();
+	}
+	bindToggle("toggle-sound", "sound", audio.setSound);
+	bindToggle("toggle-music", "music", audio.setMusic);
+	audio.onchange = function () { renders.forEach(function (r) { r(); }); };
+
+	// Keys only reach the game while the canvas is focused. Show a
+	// "click to play" overlay until it is, and nudge it when someone
+	// presses a game key without having clicked the frame.
+	var frame = document.getElementById("frame");
+	var hint = frame.querySelector(".focus-hint");
+	function setArmed(on) { frame.classList.toggle("armed", on); }
+	canvas.addEventListener("focus", function () { setArmed(true); });
+	canvas.addEventListener("blur", function () { setArmed(false); });
+	canvas.addEventListener("pointerdown", function () { setArmed(true); });
+	document.addEventListener("pointerdown", function (e) {
+		if (!canvas.contains(e.target)) setArmed(false);
+	});
+	document.addEventListener("keydown", function (e) {
+		if (frame.classList.contains("armed") || e.repeat) return;
+		if (e.code !== "Space" && e.code !== "ArrowUp" && e.code !== "KeyW" && e.code !== "KeyR") return;
+		var r = frame.getBoundingClientRect();
+		if (r.bottom < 0 || r.top > window.innerHeight) return;
+		hint.classList.remove("nudge");
+		void hint.offsetWidth;
+		hint.classList.add("nudge");
+	});
+	hint.addEventListener("animationend", function () { hint.classList.remove("nudge"); });
+
+	// Scale the 128x228 canvas by a whole number so pixels stay square.
+	var phone = canvas.closest(".phone");
+	function fit() {
+		var availW = Math.min(phone.clientWidth, window.innerWidth - 32);
+		var availH = window.innerHeight * 0.78;
+		var s = Math.floor(Math.min(availW / TrappyFlump.WIDTH, availH / TrappyFlump.HEIGHT));
+		s = Math.max(2, Math.min(4, s));
+		canvas.style.width = TrappyFlump.WIDTH * s + "px";
+		canvas.style.height = TrappyFlump.HEIGHT * s + "px";
+	}
+	fit();
+	window.addEventListener("resize", fit);
+	if (window.ResizeObserver) new ResizeObserver(fit).observe(phone);
+})();
+</script>
+</body>
+</html>

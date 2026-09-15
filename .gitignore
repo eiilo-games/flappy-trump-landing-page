@@ -1,0 +1,25 @@
+# ------------------------------------------------------------- Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+dist/
+coverage/
+test-results/
+playwright-report/
+
+# ------------------------------------------------------------ Tooling
+.claude/settings.local.json
+
+# ---------------------------------------------------------- Editors / OS
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+*.orig
+*.rej
+*.bak
+.DS_Store
+Thumbs.db
+*.log

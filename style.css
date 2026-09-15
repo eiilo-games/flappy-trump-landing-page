@@ -1,0 +1,358 @@
+/* Trappy Flump site. Palette and hard-edged shapes come straight from the
+   game: sky, sand panel, ink outlines, the orange of the in-game button. */
+
+:root {
+	--sky: #46a0f2;
+	--sky-lo: #b2e4ff;
+	--sand: #e9d092;
+	--sand-lo: #faf1d6;
+	--ink: #302a24;
+	--bark: #674a26;
+	--orange: #ff7432;
+	--orange-dk: #6e220a;
+	--grass: #66be30;
+	--grass-lt: #94de56;
+	--grass-dk: #3a761e;
+	--dirt-a: #e6c47c;
+	--dirt-b: #d4b066;
+	--dirt-line: #a07c46;
+	--display: "Press Start 2P", "Courier New", monospace;
+	--body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+	--measure: 62ch;
+	--gutter: clamp(1.25rem, 4vw, 3rem);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+	margin: 0;
+	background: var(--sand);
+	color: var(--ink);
+	font-family: var(--body);
+	font-size: 1.0625rem;
+	line-height: 1.6;
+}
+
+a { color: inherit; }
+a:focus-visible, button:focus-visible, canvas:focus-visible {
+	outline: 3px dashed var(--ink);
+	outline-offset: 3px;
+}
+
+h1, h2, h3 { font-family: var(--display); font-weight: 400; line-height: 1.5; margin: 0; }
+p { margin: 0 0 1em; max-width: var(--measure); }
+
+/* ---- buttons: the in-game "continue" button, blown up ---- */
+.btn {
+	display: inline-block;
+	font-family: var(--display);
+	font-size: 0.75rem;
+	line-height: 1;
+	text-decoration: none;
+	color: #fff;
+	background: var(--orange);
+	border: 2px solid var(--ink);
+	box-shadow: 4px 4px 0 var(--orange-dk);
+	padding: 0.9rem 1.1rem;
+	white-space: nowrap;
+}
+.btn:hover { background: #ff8a52; }
+.btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--orange-dk); }
+.btn-big { font-size: 0.875rem; padding: 1.15rem 1.4rem; }
+.btn .play-glyph {
+	display: inline-block; width: 0; height: 0; vertical-align: -1px; margin-right: 0.7em;
+	border-style: solid; border-width: 6px 0 6px 10px; border-color: transparent transparent transparent #fff;
+}
+
+/* ---- header ---- */
+.top {
+	background: var(--sky);
+	border-bottom: 2px solid var(--ink);
+	padding: 0.9rem var(--gutter);
+	display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem 1.5rem;
+}
+/* the in-game title lettering itself (title.svg, from tools/title.js): 50x8
+   game pixels, scaled by a whole number so every pixel stays square */
+.brand { display: block; line-height: 0; }
+.brand img { display: block; width: auto; height: 24px; image-rendering: pixelated; image-rendering: crisp-edges; }
+@media (max-width: 400px) { .brand img { height: 16px; } }
+.top nav { display: flex; gap: 1.25rem; flex-wrap: wrap; margin-right: auto; }
+.top nav a { color: #fff; text-decoration: none; font-weight: 500; border-bottom: 2px solid transparent; }
+.top nav a:hover { border-bottom-color: #fff; }
+
+/* ---- hero: the sky, with the game in it ---- */
+.hero {
+	position: relative;
+	background: linear-gradient(var(--sky), var(--sky-lo) 78%);
+	padding: clamp(2rem, 5vw, 4rem) var(--gutter) 0;
+	overflow: hidden;
+}
+.hero-grid {
+	position: relative; z-index: 2;
+	display: grid; grid-template-columns: minmax(0, 1fr) auto;
+	gap: 2rem clamp(2rem, 6vw, 5rem);
+	align-items: center;
+	max-width: 68rem; margin: 0 auto;
+	padding-bottom: clamp(3rem, 8vw, 6rem);
+}
+.hero h1 {
+	font-size: clamp(1.05rem, 2.6vw, 1.6rem); line-height: 1.6;
+	color: #fff; text-shadow: 3px 3px 0 #22521e;
+	max-width: 22ch; margin-bottom: 1.25rem;
+}
+.hero-copy p { color: var(--ink); font-size: 1.125rem; }
+.hero-copy .lede { max-width: 46ch; }
+.hero-copy .btn { margin: 0.5rem 0 1rem; }
+.hero-copy .fine { font-size: 0.95rem; color: #1b3d63; }
+
+.phone { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
+.phone canvas {
+	display: block;
+	width: 256px; height: 456px;
+	image-rendering: pixelated; image-rendering: crisp-edges;
+	border: 3px solid var(--ink);
+	box-shadow: 6px 6px 0 var(--bark);
+	background: var(--sky);
+	touch-action: manipulation;
+	cursor: pointer;
+}
+.frame { position: relative; }
+
+/* Until the game is clicked, keys go to the page, not the game. Say so
+   right on top of the frame; the click that dismisses it also flaps. */
+.focus-hint {
+	position: absolute; inset: 3px;
+	display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem;
+	background: rgba(48, 42, 36, 0.45);
+	pointer-events: none;
+	text-align: center;
+	padding: 1rem;
+}
+.frame.armed .focus-hint { display: none; }
+.focus-hint-label {
+	font-family: var(--display); font-size: 0.75rem; line-height: 1; color: #fff;
+	background: var(--orange); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--orange-dk);
+	padding: 0.9rem 1.1rem;
+	animation: hint-bob 1.2s ease-in-out infinite;
+}
+.focus-hint-sub { font-size: 0.8rem; font-weight: 500; color: #fff; text-shadow: 1px 1px 0 var(--ink); max-width: 16ch; line-height: 1.35; }
+.coarse-pointer { display: none; }
+@media (hover: none) and (pointer: coarse) {
+	.fine-pointer { display: none; }
+	.coarse-pointer { display: inline; }
+}
+.focus-hint.nudge .focus-hint-label { animation: hint-shake 0.45s ease-out; }
+@keyframes hint-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes hint-shake {
+	0%, 100% { transform: translateX(0); }
+	20% { transform: translateX(-8px) scale(1.08); }
+	40% { transform: translateX(8px) scale(1.08); }
+	60% { transform: translateX(-5px) scale(1.04); }
+	80% { transform: translateX(5px); }
+}
+@media (prefers-reduced-motion: reduce) {
+	.focus-hint-label, .focus-hint.nudge .focus-hint-label { animation: none; }
+}
+
+.controls { font-size: 0.9rem; color: #1b3d63; margin: 0; text-align: center; }
+.audio-toggles { display: flex; gap: 0.6rem; }
+.toggle {
+	font-family: var(--display); font-size: 0.55rem; line-height: 1; cursor: pointer;
+	color: #fff; background: var(--orange); border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--orange-dk);
+	padding: 0.6rem 0.7rem;
+}
+.toggle span { opacity: 0.85; }
+.toggle.off { background: var(--sand-lo); color: var(--ink); box-shadow: 3px 3px 0 var(--bark); }
+.toggle:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--orange-dk); }
+.controls kbd {
+	font-family: var(--display); font-size: 0.6rem; background: #fff; color: var(--ink);
+	border: 1px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); padding: 3px 5px; margin: 0 2px;
+}
+
+.hills { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 34%; display: block; z-index: 1; }
+.ground {
+	position: relative; z-index: 3; height: 44px;
+	border-top: 2px solid var(--grass-dk);
+	background:
+		linear-gradient(var(--grass) 0, var(--grass) 8px, var(--dirt-line) 8px, var(--dirt-line) 11px, transparent 11px),
+		repeating-linear-gradient(90deg, var(--dirt-a) 0 14px, var(--dirt-b) 14px 26px);
+}
+.ground::before {
+	content: ""; position: absolute; left: 0; right: 0; top: 0; height: 8px;
+	background: repeating-linear-gradient(90deg, var(--grass-lt) 0 12px, transparent 12px 28px);
+}
+
+/* ---- sections below the ground ---- */
+.section { padding: clamp(2.5rem, 6vw, 4.5rem) var(--gutter); }
+.section > .inner { max-width: 68rem; margin: 0 auto; }
+
+/* A heading set like the in-game breaking-news bar: solid colour, white
+   pixel type, a one-pixel ink line underneath. */
+.banner {
+	display: inline-block;
+	background: var(--c, var(--bark));
+	color: #fff;
+	font-size: clamp(0.8rem, 1.8vw, 1rem);
+	padding: 0.85rem 1.1rem 0.75rem;
+	border-bottom: 3px solid var(--ink);
+	margin-bottom: 1.5rem;
+}
+
+.events { list-style: none; padding: 0; margin: 2rem 0; display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); }
+.events li { background: var(--sand-lo); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--bark); }
+.events h3 { background: var(--c); color: #fff; font-size: 0.7rem; padding: 0.8rem 1rem 0.65rem; border-bottom: 2px solid var(--ink); }
+.events h3 small { display: block; font-size: 0.5rem; margin-top: 0.55rem; opacity: 0.92; }
+.events p { padding: 0.9rem 1rem 0; margin: 0 0 0.9rem; font-size: 1rem; }
+
+.rules { max-width: var(--measure); }
+.rules dt { font-weight: 600; margin-top: 0.75rem; }
+.rules dd { margin: 0; }
+
+.two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1.5rem clamp(2rem, 5vw, 4rem); }
+.two-col h3 { font-size: 0.7rem; margin-bottom: 1rem; }
+
+.cta-band { background: var(--sky); border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); text-align: center; }
+.cta-band h2 { color: #fff; text-shadow: 3px 3px 0 #22521e; font-size: clamp(0.9rem, 2.2vw, 1.3rem); margin-bottom: 1rem; }
+.cta-band p { margin-left: auto; margin-right: auto; max-width: 46ch; }
+.cta-band .btn { margin-top: 0.5rem; }
+
+footer { padding: 1.5rem var(--gutter) 2.5rem; font-size: 0.95rem; }
+footer .inner { max-width: 68rem; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; }
+footer a { text-decoration-thickness: 2px; text-underline-offset: 3px; }
+
+/* ---- long-form pages (privacy) ---- */
+/* Same bones as the landing page: a slice of sky with the hills and the
+   ground under the title, the summary on a sand panel standing on the grass,
+   headings set like the breaking-news bar. */
+.doc-hero {
+	position: relative;
+	background: linear-gradient(var(--sky), var(--sky-lo) 78%);
+	padding: clamp(2rem, 5vw, 3.5rem) var(--gutter) 0;
+	overflow: hidden;
+}
+/* the contents column plus the text column: hero copy, summary and body all
+   share this width so they line up */
+.doc { --doc-w: calc(13rem + clamp(2rem, 5vw, 4rem) + var(--measure)); }
+.doc-hero-inner { position: relative; z-index: 2; max-width: var(--doc-w); margin: 0 auto; padding-bottom: clamp(4rem, 9vw, 6.5rem); }
+.doc-hero h1 {
+	font-size: clamp(1.05rem, 2.6vw, 1.6rem); line-height: 1.6;
+	color: #fff; text-shadow: 3px 3px 0 #22521e;
+	margin: 0.75rem 0 1rem;
+}
+.doc-hero .lede { max-width: 58ch; margin: 0; font-size: 1.0625rem; }
+.doc-hero .kicker { margin: 0; }
+.date {
+	display: inline-block;
+	font-family: var(--display); font-size: 0.55rem; line-height: 1;
+	color: var(--ink); background: var(--sand-lo);
+	border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--bark);
+	padding: 0.6rem 0.7rem 0.5rem;
+}
+.doc code {
+	font-family: "IBM Plex Mono", ui-monospace, "Courier New", monospace; font-size: 0.9em;
+	background: var(--sand-lo); border: 1px solid var(--dirt-b); padding: 0.05em 0.35em;
+}
+.doc-hero code { background: rgba(255, 255, 255, 0.55); border-color: rgba(48, 42, 36, 0.35); }
+
+.doc-body {
+	max-width: 68rem; margin: 0 auto;
+	padding: 0 var(--gutter) 4rem;
+	display: grid; grid-template-columns: minmax(0, 1fr);
+	gap: 0 clamp(2rem, 5vw, 4rem);
+	grid-template-areas: "summary" "toc" "policy";
+}
+.summary { grid-area: summary; }
+.toc { grid-area: toc; }
+.policy { grid-area: policy; }
+
+/* the summary panel stands on the grass, overlapping the ground strip */
+.summary {
+	position: relative; z-index: 4;
+	margin: -2.25rem 0 2.5rem;
+	background: var(--sand-lo);
+	border: 2px solid var(--ink);
+	box-shadow: 6px 6px 0 var(--bark);
+}
+.summary .banner { display: block; margin: 0; border-bottom: 2px solid var(--ink); font-size: 0.7rem; padding: 0.8rem 1.1rem 0.65rem; }
+.summary ul { margin: 0; padding: 1rem 1.25rem 0.25rem 1.25rem; list-style: none; }
+.summary li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+.summary li::before {
+	content: ""; position: absolute; left: 0; top: 0.5em;
+	width: 0.6rem; height: 0.6rem; background: var(--grass); border: 2px solid var(--ink);
+}
+
+.toc { align-self: start; margin-bottom: 2rem; }
+.toc h2 { font-size: 0.6rem; color: var(--bark); margin-bottom: 0.75rem; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.toc a {
+	display: inline-block; text-decoration: none; font-size: 0.95rem; font-weight: 500;
+	color: var(--ink); background: var(--sand-lo);
+	border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--bark);
+	padding: 0.35rem 0.7rem;
+}
+.toc a:hover { background: #fff; }
+.toc a:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--bark); }
+
+.policy { max-width: var(--measure); }
+.policy h2 { scroll-margin-top: 1.5rem; font-size: 0.7rem; margin: 2.75rem 0 1.1rem; }
+.policy h2:first-child { margin-top: 0; }
+.policy h3 {
+	font-family: var(--body); font-weight: 600; font-size: 1.05rem;
+	margin: 1.75rem 0 0.5rem; padding-left: 0.75rem;
+	border-left: 4px solid var(--orange);
+}
+.policy a { text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: var(--orange); }
+.policy a:hover { color: var(--orange-dk); }
+.policy ul { padding-left: 1.25rem; list-style: square; max-width: var(--measure); }
+.policy li { margin-bottom: 0.45rem; }
+.policy li::marker { color: var(--orange); }
+.policy .never { list-style: none; padding-left: 0; }
+.policy .never li { padding-left: 1.6rem; position: relative; }
+.policy .never li::before {
+	content: "\2715"; position: absolute; left: 0; top: 0;
+	font-family: var(--display); font-size: 0.7rem; line-height: 1.7; color: var(--orange-dk);
+}
+.policy .top-link { margin-top: 3rem; font-size: 0.95rem; }
+.doc table { border-collapse: collapse; margin: 1rem 0 1.5rem; font-size: 0.95rem; }
+.doc th, .doc td { border: 1px solid var(--bark); padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; }
+.doc th { background: var(--sand-lo); }
+.doc .tablewrap { overflow-x: auto; }
+
+@media (min-width: 900px) {
+	.doc-body {
+		grid-template-columns: 13rem minmax(0, var(--measure));
+		grid-template-areas: "summary summary" "toc policy";
+		justify-content: center;
+	}
+	.summary { max-width: var(--doc-w); }
+	.toc { position: sticky; top: 1.5rem; margin-bottom: 0; }
+	.toc ol { flex-direction: column; gap: 0.4rem; align-items: stretch; }
+	.toc a { display: block; box-shadow: none; border-color: transparent; background: none; padding: 0.3rem 0.6rem; border-left: 4px solid var(--dirt-b); }
+	.toc a:hover { background: var(--sand-lo); border-left-color: var(--orange); }
+	.toc a:active { transform: none; box-shadow: none; }
+}
+
+@media print {
+	.top, footer, .toc, .hills, .ground, .top-link { display: none; }
+	body { background: #fff; font-size: 11pt; }
+	.doc-hero { background: none; padding: 0; }
+	.doc-hero-inner { padding-bottom: 0; }
+	.doc-body { display: block; padding: 0; }
+	.summary { max-width: none; }
+	.doc-hero h1 { color: var(--ink); text-shadow: none; }
+	.summary { margin: 1rem 0 1.5rem; box-shadow: none; }
+	.banner { color: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+	.policy a::after { content: " (" attr(href) ")"; font-size: 0.85em; }
+	.policy a[href^="#"]::after, .policy a[href^="mailto"]::after { content: ""; }
+}
+
+@media (max-width: 760px) {
+	.hero-grid { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+	.phone { order: -1; }
+	.hero h1 { max-width: none; margin-left: auto; margin-right: auto; }
+	.hero-copy p { margin-left: auto; margin-right: auto; }
+	.top nav { order: 3; width: 100%; }
+}
