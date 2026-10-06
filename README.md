@@ -11,6 +11,7 @@ lives in the private `trappy-flump` repository; this site is a port of it.
 ```
 index.html     landing page: hero with the live game, events, about, CTA
 privacy.html   privacy policy (link this URL in Play Console and AdMob)
+privacy-YYYY-MM-DD.html  past versions of the policy, named by effective date (noindex)
 style.css      one stylesheet for both pages
 game.js        the game, a port of mobile/scripts/game.gd (trappy-flump repo) to canvas
 audio.js       Web Audio layer: listens to game events, owns the mute toggles
@@ -83,6 +84,22 @@ hit, or achievements do not persist.
   which only resolves once the app is published. Until then they 404.
 - Paste `privacy.html`'s public URL into Play Console (Store listing and
   Data safety) and into the AdMob app settings.
+
+## Changing the privacy policy
+
+Keep every version that was ever live:
+
+1. Copy `privacy.html` to `privacy-<old effective date>.html`, then in the
+   copy add `<meta name="robots" content="noindex">`, drop
+   `aria-current` from the Privacy nav link, mark the date as archived
+   ("Archived: effective <from> to <day before the new date>") and add the
+   "This is an old version" line under the heading pointing back to
+   `privacy.html`.
+2. Edit `privacy.html`, set the new effective date at the top, and add a
+   row to the table under "Changes and past versions" linking the archived
+   file.
+3. Publish it before the app version that needs it ships, and update the
+   Play Data safety form to match.
 
 ## Audio
 
